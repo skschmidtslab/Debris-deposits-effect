@@ -12,4 +12,4 @@ This study evaluates how debris deposits influence microbial succession along th
 7. Diversity_Euk.R: Statistical analysis for eukaryotes, covering Alpha and Beta diversity, PCoA plots, and robustness testing (PERMANOVA/PERMDISPER).
 8. SupraglacialDebris_DebrisDeposits_Heatmap.R: Script to visualize total microbial abundances in supraglacial debris and their subsequent projection onto the glacier forefield using heatmaps.
 9. Biogeo_Env_factors.R: Analysis of correlations between environmental variables, ASV distributions, and diversity indices. This script also includes comparative analyses of DNA concentration and pH across sample groups.
-10. Phototrophs.R: Focused analysis of phototrophic communities. It generates pie charts representing relative abundances of Cyanobacteria (16S) and micro-eukaryotic phototrophs such as mosses and microalgae (18S).
+10. Phototroph_18S.R: Focused analysis of phototrophic communities. It generates pie charts representing relative abundances of phototrophs such as mosses and microalgae (18S).
