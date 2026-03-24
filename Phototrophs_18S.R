@@ -207,10 +207,10 @@ colors <- c(
 ###Pie plot
 pie_215DDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
-  #Comment here if you want to remove the labels of each portion of the pie.
-  geom_text(aes(x = 2, y = Summed_Relative_Abundance, label = paste0(Summed_Relative_Abundance, "%")),
-  position = position_stack(vjust = 0.5), size = 1, fontface = "bold", color = "white") +
-  #Until here the comment.
+  # #Comment here if you want to remove the labels of each portion of the pie.
+  # geom_text(aes(x = 2, y = Summed_Relative_Abundance, label = paste0(Summed_Relative_Abundance, "%")),
+  # position = position_stack(vjust = 0.5), size = 1, fontface = "bold", color = "white") +
+  # #Until here the comment.
   coord_polar(theta = "y", start = -pi/0.6) +  #Move angle of the pie
   theme_void() +
   scale_fill_manual(values = colors) +
@@ -293,7 +293,7 @@ other_phylum_abundance
 phototroph_percentage <- (phototrophs_abundance / total_abundance) * 100
 phototroph_percentage
 other_phylum_percentage <- (other_phylum_abundance / total_abundance) * 100
-other_phylum_percentage
+ other_phylum_percentage
 
 #Mean and SD values:
 phototroph_data <- ps.melt %>%
@@ -322,7 +322,7 @@ pie_215nonDDs <- ggplot(data_215nonDDs, aes(x = 2, y = Abundance, fill = Phylum)
   coord_polar(theta = "y", start = +pi/-5) +  # Girar el donut plot a 90 grados en sentido contrario a las agujas del reloj
   theme_void() +
   xlim(1, 2.5) +
-  ggtitle("DDs (0-215m)") +
+  ggtitle("Non-DDs (0-215m)") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_manual(values = colors) +
   theme(legend.position = "bottom")  # Ajustar la posición de la leyenda si es necesario
@@ -426,10 +426,10 @@ colors <- c(
 ###Pie plot
 pie_215nonDDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
-  #Comment here if you want to remove the labels of each portion of the pie.
-  geom_text(aes(x = 2, y = Summed_Relative_Abundance, label = paste0(Summed_Relative_Abundance, "%")),
-            position = position_stack(vjust = 0.5), size = 1, fontface = "bold", color = "white") +
-  #Until here the comment.
+  # #Comment here if you want to remove the labels of each portion of the pie.
+  # geom_text(aes(x = 2, y = Summed_Relative_Abundance, label = paste0(Summed_Relative_Abundance, "%")),
+  #           position = position_stack(vjust = 0.5), size = 1, fontface = "bold", color = "white") +
+  # #Until here the comment.
   coord_polar(theta = "y", start = -pi/0.6) +  #Move angle of the pie
   theme_void() +
   scale_fill_manual(values = colors) +
@@ -437,7 +437,7 @@ pie_215nonDDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Rel
   theme(legend.position = "bottom")
 pie_215nonDDs_18S
 
-ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/Phototroph_pie_215nonDDs_18S.png",pie_215nonDDs_18S, width = 9, height = 4)
+ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/Phototroph_pie_215nonDDs_18S.png",pie_215nonDDs_18S, width = 11, height = 4)
 
 ######
 ######
@@ -539,7 +539,7 @@ pie_850DDs <- ggplot(data_850DDs, aes(x = 2, y = Abundance, fill = Phylum)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
   geom_text(aes(x = 2, y = Abundance, label = paste0(Abundance, "%")), 
             position = position_stack(vjust = 0.5), size = 5) +
-  coord_polar(theta = "y", start = +pi/1.18) +  # Girar el donut plot a 90 grados en sentido contrario a las agujas del reloj
+  coord_polar(theta = "y", start = +pi/-7) +  # Girar el donut plot a 90 grados en sentido contrario a las agujas del reloj
   theme_void() +
   xlim(1, 2.5) +
   ggtitle("DDs (315-850m)") +
@@ -645,14 +645,16 @@ colors <- c(
   "Limnomonas (microalgae)"= "#7C96AB",
   "Sanguina (microalgae)"="#E7D4B5" ,
   "Xanthonema (microalgae)" = "#25671E",
-  "Coccomyxa (microalgae)"= "#FE9EC7")
+  "Coccomyxa (microalgae)"= "#FE9EC7",
+  "Ochromonas (microalgae)"= "#FFF7CD",
+  "Chromochloris (microalgae)"= "#64E2B7")
 ###Pie plot
 pie_850DDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
-  #Comment here if you want to remove the labels of each portion of the pie.
-  geom_text(aes(x = 2, y = Summed_Relative_Abundance, label = paste0(Summed_Relative_Abundance, "%")),
-            position = position_stack(vjust = 0.5), size = 1, fontface = "bold", color = "white") +
-  #Until here the comment.
+  # #Comment here if you want to remove the labels of each portion of the pie.
+  # geom_text(aes(x = 2, y = Summed_Relative_Abundance, label = paste0(Summed_Relative_Abundance, "%")),
+  #           position = position_stack(vjust = 0.5), size = 1, fontface = "bold", color = "white") +
+  # #Until here the comment.
   coord_polar(theta = "y", start = -pi/0.6) +  #Move angle of the pie
   theme_void() +
   scale_fill_manual(values = colors) +
@@ -762,10 +764,10 @@ pie_850nonDDs <- ggplot(data_850nonDDs, aes(x = 2, y = Abundance, fill = Phylum)
   geom_bar(stat = "identity", color = "white", width = 1) +
   geom_text(aes(x = 2, y = Abundance, label = paste0(Abundance, "%")), 
             position = position_stack(vjust = 0.5), size = 5) +
-  coord_polar(theta = "y", start = +pi/1.18) +  # Girar el donut plot a 90 grados en sentido contrario a las agujas del reloj
+  coord_polar(theta = "y", start = +pi/-7) +  # Girar el donut plot a 90 grados en sentido contrario a las agujas del reloj
   theme_void() +
   xlim(1, 2.5) +
-  ggtitle("DDs (315-850m)") +
+  ggtitle("Non-DDs (315-850m)") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_manual(values = colors) +
   theme(legend.position = "bottom")  # Ajustar la posición de la leyenda si es necesario
@@ -868,8 +870,9 @@ colors <- c(
   "Limnomonas (microalgae)"= "#7C96AB",
   "Sanguina (microalgae)"="#E7D4B5" ,
   "Xanthonema (microalgae)" = "#25671E",
-  "Coccomyxa (microalgae)"= "#FE9EC7")
-
+  "Coccomyxa (microalgae)"= "#FE9EC7",
+  "Ochromonas (microalgae)"= "#FFF7CD",
+  "Chromochloris (microalgae)"= "#64E2B7")
 ###Pie plot
 pie_850nonDDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
@@ -884,3 +887,4 @@ pie_850nonDDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Rel
   theme(legend.position = "bottom")
 pie_850nonDDs_18S
 ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/Phototroph_pie_850nonDDs_18S.png",pie_850nonDDs_18S, width = 9, height = 4)
+ 
