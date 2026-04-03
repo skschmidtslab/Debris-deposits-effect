@@ -239,3 +239,100 @@ Richness_18S
 #Save plot
 ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/Richness_18S_v2.png", 
        Richness_18S, width = 4.5 , height = 5)
+
+#######Beta diversity ----
+
+######Filtering physeq sample sums and make it compositional------
+physeq_18_F <- prune_samples(sample_sums(physeq_18S) > 0, physeq_18S)
+pseq18.rel <- microbiome::transform(physeq_18_F, "compositional")
+# Verifica las sumas de abundancias por muestra
+sample_sums(pseq18.rel)
+
+######Distances for PCoA and PERMANOVA-----
+DistBC18 = phyloseq::distance(pseq18.rel, method = "bray")
+ordBC <- ordinate(pseq18.rel, method = "PCoA", distance = DistBC18)
+#Elements for the permanova
+otu <- abundances(pseq18.rel)
+meta <- microbiome::meta(pseq18.rel)
+#Permanova:
+permanova18 <- adonis2(t(otu) ~ sample_type,
+                       data = meta, permutations=99, method = "bray")
+permanova18 #This is a global view of the differences among all the samples.
+
+#Let's do a pair comparison:
+DistBC18 <- as.matrix(DistBC18)
+metadata <- sample_data(pseq18.rel)
+
+set.seed(123)
+pairwise_adonis <- pairwise.adonis(
+  DistBC18, 
+  metadata$sample_type, 
+  perm = 999
+)
+
+# Verificar dimensiones de la matriz de distancias y factores
+print(dim(DistBC18))
+print(length(metadata$sample_type))
+
+#Verify names are the same
+print(rownames(DistBC18))
+print(rownames(metadata)) #YES!
+df_pairwise_adonis <- as.data.frame(pairwise_adonis)
+df_pairwise_adonis #Good! I can see my results here.
+#Create the table grob
+table <- tableGrob(df_pairwise_adonis)
+#Create the title grob with a blank grob on the right side
+title <- arrangeGrob(
+  textGrob("18S rRNA - Pairwise PERMANOVA", gp = gpar(fontsize = 16, fontface = "bold")),
+  rectGrob(gp = gpar(fill = NA, col = NA)),  # Blank grob
+  widths = c(0.9, 1),
+  ncol = 2)
+#Combine the title and table grobs
+pairwise_adonis_18S <- grid.arrange(title, table, ncol = 1, heights = c(0.1, 1), top = 0.1, left = 0.1)
+pairwise_adonis_18S #My table.
+#Save the table as a PNG file
+ggsave("Pairwise_PERMANOVA_18.png", pairwise_adonis_18S, width = 9.9, height = 2.2, dpi = 300)
+
+#Let's also corroborate the distance as a factor of differeces with betadisper (Permdisper):
+metadata_betad <- data.frame(sample_data(pseq.rel))
+mod_betad <- betadisper(DistBC, metadata_betad$sample_type) #Betadisper for the 4 groups
+anova_res <- anova(mod_betad)
+print(anova_res)
+perm_test <- permutest(mod_betad, pairwise = TRUE, permutations = 999)
+print(perm_test) #permutation test
+
+#Let's do it per group: 
+#Pvalue <0.05 means there are different variance in the samples of that groups?
+
+sub_samples <- which(metadata_betad$distance == "0-215")
+dist_sub <- as.dist(as.matrix(DistBC)[sub_samples, sub_samples])
+group_sub <- metadata_betad$sample_type[sub_samples]
+mod_sub <- betadisper(dist_sub, group_sub)
+anova(mod_sub) #F=1.4189, Pvalue=0.2436 #Homogeneous dispersion
+
+sub_samples <- which(metadata_betad$distance == "315-850")
+dist_sub <- as.dist(as.matrix(DistBC)[sub_samples, sub_samples])
+group_sub <- metadata_betad$sample_type[sub_samples]
+mod_sub <- betadisper(dist_sub, group_sub)
+anova(mod_sub) #F= 3.3254, Pvalue=0.08183 #Homogeneous dispersion
+
+sub_samples <- which(metadata_betad$stripe_site == "DDs")
+dist_sub <- as.dist(as.matrix(DistBC)[sub_samples, sub_samples])
+group_sub <- metadata_betad$sample_type[sub_samples]
+mod_sub <- betadisper(dist_sub, group_sub)
+anova(mod_sub) #F=16.572, Pvalue= 0.0004404 #Different variance in samples inside of this group.
+
+sub_samples <- which(metadata_betad$stripe_site == "non-DDs")
+dist_sub <- as.dist(as.matrix(DistBC)[sub_samples, sub_samples])
+group_sub <- metadata_betad$sample_type[sub_samples]
+mod_sub <- betadisper(dist_sub, group_sub)
+anova(mod_sub) #F= 0.355 and Pvalue=0.5564 #Homogeneous dispersion.
+
+#Interpretation: 
+#In 0-215m samples: This validates that any differences found in PERMANOVA are due to location (centroid shifts) and not just differences in group variance.
+#In 315-850m samples: This validates marginally that any differences found in PERMANOVA are due to location (centroid shifts) and not just differences in group variance.
+#In DDs transect: Variation is not equal among there distances subgroups.###Here to be careful on the PERMANOVA interpretation.
+#In non-DDs transect: This validates that any differences found in PERMANOVA are due to location and not just differeces in group variance.
+
+
+
