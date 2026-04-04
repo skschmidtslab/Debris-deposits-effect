@@ -6,9 +6,10 @@ This study evaluates how debris deposits influence microbial succession along th
 1. 16S ASV file: Raw output from the DADA2 pipeline for prokaryotes.
 2. 18S ASV file: Raw output from the DADA2 pipeline for eukaryotes.
 3. Metadata: Sample and correspondent environmental data.
-4. Physeq_diversity_Euk.R: Script for phyloseq object construction using 18S data. It follows the same processing steps as the prokaryotic workflow for consistency.
-5. Rel_abundances_18S: Scripts for getting the relative abundances using the physeq object created before.
-6. DDs_SD_18S.R: Script to visualize total microbial abundances in supraglacial debris and their subsequent projection onto the glacier forefield using heatmaps.
-7. Phototroph_18S.R: Focused analysis of phototrophic communities. It generates pie charts representing relative abundances of phototrophs such as mosses and microalgae (18S).
+4. Physeq_diversity_116S.R: Script for phyloseq object construction using 16S ASVs.
+5. Physeq_diversity_18S.R: Script for phyloseq object construction using 18S ASVs.
+7. Rel_abundances_18S: Scripts for getting the relative abundances using the physeq object created before.
+8. DDs_SD_18S.R: Script to visualize total microbial abundances in supraglacial debris and their subsequent projection onto the glacier forefield using heatmaps.
+9. Phototroph_18S.R: Focused analysis of phototrophic communities. It generates pie charts representing relative abundances of phototrophs such as mosses and microalgae (18S).
    
 Note: Some plots were improve in color, format (arrows and lines) and resolution in Inkscape.
