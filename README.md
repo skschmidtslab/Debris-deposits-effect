@@ -9,7 +9,8 @@ This study evaluates how debris deposits influence microbial succession along th
 4. Physeq_diversity_16S.R: Script for phyloseq object construction using 16S ASVs.
 5. Physeq_diversity_18S.R: Script for phyloseq object construction using 18S ASVs.
 7. Rel_abundances_18S: Scripts for getting the relative abundances using the physeq object created before.
-8. DDs_SD_18S.R: Script to visualize total microbial abundances in supraglacial debris and their subsequent projection onto the glacier forefield using heatmaps.
-9. Phototroph_18S.R: Focused analysis of phototrophic communities. It generates pie charts representing relative abundances of phototrophs such as mosses and microalgae (18S).
+8. Core_microbiome: Scripts to identify core taxa per group of samples for 16S and 18S (with a prevalence of 60%), and to represent them in a venn diagram. 
+9. DDs_SD_18S.R: Script to visualize total microbial abundances in supraglacial debris and their subsequent projection onto the glacier forefield using heatmaps.
+10. Phototroph_18S.R: Focused analysis of phototrophic communities. It generates pie charts representing relative abundances of phototrophs such as mosses and microalgae (18S).
    
 Note: Some plots were improve in color, format (arrows and lines) and resolution in Inkscape.
