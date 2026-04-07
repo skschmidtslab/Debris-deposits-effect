@@ -10,7 +10,7 @@ setwd("~/Documents/Steve Lab/Svalbard/18S_diversity_2021/phototrophs")
 
 #------Breaking out the phyloseq in the groups samples------
 #############0-215 DDs------
-physeq_215DDs <- subset_samples(physeq_18, sample_type == "0-215 DDs")
+physeq_215DDs <- subset_samples(physeq_18S, sample_type == "0-215 DDs")
 #Remove ESVs which have 0 counts in all samples belonging to 0-215 DDs group/
 physeq_215DDsf <- prune_taxa(taxa_sums(physeq_215DDs) > 0, physeq_215DDs)
 physeq_215DDsf
@@ -117,7 +117,7 @@ pie_215DDs <- ggplot(data_215DDs, aes(x = 2, y = Abundance, fill = Phylum)) +
 pie_215DDs 
 ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/215DDs_Euk_pieplot.png", pie_215DDs)
 
-########Genus at the Phylum level and at the last taxon - Phototrophs ------
+########0-215 DDs Genus at the Phylum level and at the last taxon - Phototrophs ------
 ps.rel_18_filtered ###Phyloseq of 0-215 
 df_physeq <- otu_table(ps.rel_18_filtered)
 colnames(df_physeq)
@@ -149,7 +149,7 @@ df_physeq_selected <- df_physeq_selected %>%
 #Let's do our rank:
 df_genus_abundance <- df_physeq_selected %>%
    select(ASV_ID, Relative_Abundance) #This isolated table make us easy to see the highest abundant in the rank
-df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 0.5, "ASVs < 0.5%", df_physeq_selected$ASV_ID)
+df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 2, "ASVs < 2%", df_physeq_selected$ASV_ID)
 df_genus_abundance #Now, ASV <1% will be recognize all the same as a small percentage ASV.
 #Make a summary of the ASVs we are going to plot
 df_genus_abundance_summed <- df_genus_abundance %>%
@@ -184,25 +184,50 @@ df_genus_abundance_summed <- df_genus_abundance_summed %>%
   mutate(
     Description = case_when(
       Taxon == "Class: Bryopsida" ~ "Bryopsida (moss)",
-      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (mosses)",
-      Taxon == "Family: Bryaceae" ~ "Bryaceae (mosses)",
+      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (moss)",
+      Taxon == "Family: Bryaceae" ~ "Bryaceae (moss)",
       Taxon == "Genus: Blasia sp." ~ "Blasia (liverworts)",
       Taxon == "Genus: Tortula sp. " ~ "Tortula (moss)",
+      Taxon == "Genus: Sanguina sp." ~ "Sanguina (microalgae)",
       Taxon == "Genus: Chloroidium sp." ~ "Chloroidium (microalgae)",
-      Taxon == "Others" ~ "Others",
+      Taxon == "Genus: Limnomonas sp." ~ "Limnomonas (microalgae)",
+      Taxon == "Family: Chlamydomonadales_fa" ~ "Chlamydomonadales (microalgae)",
+      Taxon == "Genus: Chloroidium" ~ "Chloroidium (microalgae)",
+      Taxon == "Genus: Chlamydomonas" ~ "Chlamydomonadales (microalgae)",
+      Taxon == "Others" ~ "Others <2%",
+      Taxon == "Phylum: Ochrophyta" ~ "Ochrophyta (microalgae)",
+      Taxon == "Class: Embryophyta" ~ "Embryophyta (moss)",
+      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (moss)",
+      Taxon == "Class: Trebouxiophyceae" ~ "Trebouxiophyceae (microalgae)",
+      Taxon == "Genus: Chromochloris sp." ~ "Chromochloris (microalgae)",
+      Taxon == "Genus: Coccomyxa" ~ "Coccomyxa (microalgae)",
+      Taxon == "Genus: Xanthonema" ~ "Xanthonema (microalgae)",
+      Taxon == "Order: Bryales" ~ "Bryales (moss)",
       TRUE ~ Taxon ))
 
 df_genus_abundance_summed
 ########pieplot ------
 #Different colors for each ASV
+
 colors <- c(
   "Bryopsida (moss)" = "#E9A89B",   # azul
-  "Atrichopsis (mosses)" = "#B7C9F2",       # naranja
-  "Bryaceae (mosses)" = "#EF9C66",       # verde
+  "Atrichopsis (moss)" = "#B7C9F2",       # naranja
+  "Bryaceae (moss)" = "#EF9C66",       # verde
   "Blasia (liverworts)" = "#78ABA8",
   "Tortula (moss)" = "#FCDC94",
   "Chloroidium (microalgae)" = "#C8CFA0", 
-  "Others"= "grey")
+  "Others <2%"= "grey",
+  "Chlamydomonadales (microalgae)" = "#BBE9FF",
+  "Limnomonas (microalgae)"= "#7C96AB",
+  "Sanguina (microalgae)"="#FD7979" ,
+  "Xanthonema (microalgae)" = "#25671E",
+  "Coccomyxa (microalgae)"= "#FE9EC7",
+  "Ochromonas (microalgae)"= "#FFF7CD",
+  "Ochrophyta (microalgae)" = "#B87C4C",
+  "Embryophyta (moss)"= "#E7D4B5",
+  "Chromochloris (microalgae)"= "#64E2B7",
+  "Bryales (moss)" = "#FFE6E6"
+)
 
 ###Pie plot
 pie_215DDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
@@ -222,7 +247,7 @@ ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/Phototroph_pie_215DDs_18S.p
 ######
 ######
 #############0-215 nonDDs------
-physeq_215nonDDs <- subset_samples(physeq_18, sample_type == "0-215 non-DDs")
+physeq_215nonDDs <- subset_samples(physeq_18S, sample_type == "0-215 non-DDs")
 #Remove ESVs which have 0 counts in all samples belonging to 0-215 DDs group/
 physeq_215nonDDsf <- prune_taxa(taxa_sums(physeq_215nonDDs) > 0, physeq_215nonDDs)
 physeq_215nonDDsf
@@ -329,7 +354,7 @@ pie_215nonDDs <- ggplot(data_215nonDDs, aes(x = 2, y = Abundance, fill = Phylum)
 pie_215nonDDs 
 ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/215nonDDs_Euk_pieplot.png", pie_215nonDDs)
 
-########Genus at the Phylum level and at the last taxon - Phototrophs-----
+########0-215 non-DDs Genus at the Phylum level and at the last taxon - Phototrophs-----
 ps.rel_18_filtered ###Phyloseq of 0-215 nonDDs 
 df_physeq <- otu_table(ps.rel_18_filtered)
 colnames(df_physeq)
@@ -361,7 +386,7 @@ df_physeq_selected <- df_physeq_selected %>%
 #Let's do our rank:
 df_genus_abundance <- df_physeq_selected %>%
   select(ASV_ID, Relative_Abundance) #This isolated table make us easy to see the highest abundant in the rank
-df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 0.5, "ASVs < 0.5%", df_physeq_selected$ASV_ID)
+df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 2, "ASVs < 2%", df_physeq_selected$ASV_ID)
 df_genus_abundance #Now, ASV <1% will be recognize all the same as a small percentage ASV.
 #Make a summary of the ASVs we are going to plot
 df_genus_abundance_summed <- df_genus_abundance %>%
@@ -394,8 +419,8 @@ df_genus_abundance_summed <- df_genus_abundance_summed %>%
   mutate(
     Description = case_when(
       Taxon == "Class: Bryopsida" ~ "Bryopsida (moss)",
-      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (mosses)",
-      Taxon == "Family: Bryaceae" ~ "Bryaceae (mosses)",
+      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (moss)",
+      Taxon == "Family: Bryaceae" ~ "Bryaceae (moss)",
       Taxon == "Genus: Blasia sp." ~ "Blasia (liverworts)",
       Taxon == "Genus: Tortula sp. " ~ "Tortula (moss)",
       Taxon == "Genus: Sanguina sp." ~ "Sanguina (microalgae)",
@@ -404,25 +429,42 @@ df_genus_abundance_summed <- df_genus_abundance_summed %>%
       Taxon == "Family: Chlamydomonadales_fa" ~ "Chlamydomonadales (microalgae)",
       Taxon == "Genus: Chloroidium" ~ "Chloroidium (microalgae)",
       Taxon == "Genus: Chlamydomonas" ~ "Chlamydomonadales (microalgae)",
-      Taxon == "Others" ~ "Others",
+      Taxon == "Others" ~ "Others <2%",
+      Taxon == "Phylum: Ochrophyta" ~ "Ochrophyta (microalgae)",
+      Taxon == "Class: Embryophyta" ~ "Embryophyta (moss)",
+      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (moss)",
+      Taxon == "Class: Trebouxiophyceae" ~ "Trebouxiophyceae (microalgae)",
+      Taxon == "Genus: Chromochloris sp." ~ "Chromochloris (microalgae)",
+      Taxon == "Genus: Coccomyxa" ~ "Coccomyxa (microalgae)",
+      Taxon == "Genus: Xanthonema" ~ "Xanthonema (microalgae)",
+      Taxon == "Order: Bryales" ~ "Bryales (moss)",
       TRUE ~ Taxon ))
+
 df_genus_abundance_summed
 
 
 ########pieplot-----
 #Different colors for each ASV
+
 colors <- c(
   "Bryopsida (moss)" = "#E9A89B",   # azul
-  "Atrichopsis (mosses)" = "#B7C9F2",       # naranja
-  "Bryaceae (mosses)" = "#EF9C66",       # verde
+  "Atrichopsis (moss)" = "#B7C9F2",       # naranja
+  "Bryaceae (moss)" = "#EF9C66",       # verde
   "Blasia (liverworts)" = "#78ABA8",
   "Tortula (moss)" = "#FCDC94",
   "Chloroidium (microalgae)" = "#C8CFA0", 
-  "Others"= "grey",
+  "Others <2%"= "grey",
   "Chlamydomonadales (microalgae)" = "#BBE9FF",
   "Limnomonas (microalgae)"= "#7C96AB",
-  "Sanguina (microalgae)"="#E7D4B5" )
-
+  "Sanguina (microalgae)"="#FD7979" ,
+  "Xanthonema (microalgae)" = "#25671E",
+  "Coccomyxa (microalgae)"= "#FE9EC7",
+  "Ochromonas (microalgae)"= "#FFF7CD",
+  "Ochrophyta (microalgae)" = "#B87C4C",
+  "Embryophyta (moss)"= "#E7D4B5",
+  "Chromochloris (microalgae)"= "#64E2B7",
+  "Bryales (moss)" = "#FFE6E6"
+)
 ###Pie plot
 pie_215nonDDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
@@ -442,7 +484,7 @@ ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/Phototroph_pie_215nonDDs_18
 ######
 ######
 #############315-850 DDs-----
-physeq_850DDs <- subset_samples(physeq_18, sample_type == "315-850 DDs")
+physeq_850DDs <- subset_samples(physeq_18S, sample_type == "315-850 DDs")
 #Remove ESVs which have 0 counts in all samples belonging to 0-215 DDs group/
 physeq_850DDsf <- prune_taxa(taxa_sums(physeq_850DDs) > 0, physeq_850DDs)
 physeq_850DDsf
@@ -549,7 +591,7 @@ pie_850DDs <- ggplot(data_850DDs, aes(x = 2, y = Abundance, fill = Phylum)) +
 pie_850DDs 
 ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/850DDs_Euk_pieplot.png", pie_850DDs)
 
-########Genus at the Phylum level and at the last taxon - Phototrophs ----
+########315-850 DDs Genus at the Phylum level and at the last taxon - Phototrophs ----
 ps.rel_18_filtered ###Phyloseq of 315-850
 df_physeq <- otu_table(ps.rel_18_filtered)
 colnames(df_physeq)
@@ -581,7 +623,7 @@ df_physeq_selected <- df_physeq_selected %>%
 #Let's do our rank:
 df_genus_abundance <- df_physeq_selected %>%
   select(ASV_ID, Relative_Abundance) #This isolated table make us easy to see the highest abundant in the rank
-df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 0.5, "ASVs < 0.5%", df_physeq_selected$ASV_ID)
+df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 2, "ASVs <2%", df_physeq_selected$ASV_ID)
 df_genus_abundance #Now, ASV <1% will be recognize all the same as a small percentage ASV.
 #Make a summary of the ASVs we are going to plot
 df_genus_abundance_summed <- df_genus_abundance %>%
@@ -614,8 +656,8 @@ df_genus_abundance_summed <- df_genus_abundance_summed %>%
   mutate(
     Description = case_when(
       Taxon == "Class: Bryopsida" ~ "Bryopsida (moss)",
-      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (mosses)",
-      Taxon == "Family: Bryaceae" ~ "Bryaceae (mosses)",
+      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (moss)",
+      Taxon == "Family: Bryaceae" ~ "Bryaceae (moss)",
       Taxon == "Genus: Blasia sp." ~ "Blasia (liverworts)",
       Taxon == "Genus: Tortula sp. " ~ "Tortula (moss)",
       Taxon == "Genus: Sanguina sp." ~ "Sanguina (microalgae)",
@@ -628,26 +670,31 @@ df_genus_abundance_summed <- df_genus_abundance_summed %>%
       Taxon == "Genus: Xanthonema" ~ "Xanthonema (microalgae)",
       Taxon == "Genus: Ochromonas" ~ "Ochromonas (microalgae)",
       Taxon == "Genus: Coccomyxa" ~ "Coccomyxa (microalgae)",
-      Taxon == "Others" ~ "Others",
+      Taxon == "Others" ~ "Others <2%",
       TRUE ~ Taxon ))
 df_genus_abundance_summed
 
 ########pieplot ----
 colors <- c(
   "Bryopsida (moss)" = "#E9A89B",   # azul
-  "Atrichopsis (mosses)" = "#B7C9F2",       # naranja
-  "Bryaceae (mosses)" = "#EF9C66",       # verde
+  "Atrichopsis (moss)" = "#B7C9F2",       # naranja
+  "Bryaceae (moss)" = "#EF9C66",       # verde
   "Blasia (liverworts)" = "#78ABA8",
   "Tortula (moss)" = "#FCDC94",
   "Chloroidium (microalgae)" = "#C8CFA0", 
-  "Others"= "grey",
+  "Others <2%"= "grey",
   "Chlamydomonadales (microalgae)" = "#BBE9FF",
   "Limnomonas (microalgae)"= "#7C96AB",
-  "Sanguina (microalgae)"="#E7D4B5" ,
+  "Sanguina (microalgae)"="#FD7979" ,
   "Xanthonema (microalgae)" = "#25671E",
   "Coccomyxa (microalgae)"= "#FE9EC7",
   "Ochromonas (microalgae)"= "#FFF7CD",
-  "Chromochloris (microalgae)"= "#64E2B7")
+  "Ochrophyta (microalgae)" = "#B87C4C",
+  "Embryophyta (moss)"= "#E7D4B5",
+  "Chromochloris (microalgae)"= "#64E2B7",
+  "Bryales (moss)" = "#FFE6E6"
+)
+
 ###Pie plot
 pie_850DDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
@@ -667,7 +714,7 @@ ggsave("~/Documents/Steve Lab/Svalbard/Paper figures/Phototroph_pie_850DDs_18S.p
 ######
 ######
 #############315-850 nonDDs----
-physeq_850nonDDs <- subset_samples(physeq_18, sample_type == "315-850 non-DDs")
+physeq_850nonDDs <- subset_samples(physeq_18S, sample_type == "315-850 non-DDs")
 #Remove ESVs which have 0 counts in all samples belonging to 0-215 DDs group/
 physeq_850nonDDsf <- prune_taxa(taxa_sums(physeq_850nonDDs) > 0, physeq_850nonDDs)
 physeq_850nonDDsf
@@ -806,7 +853,7 @@ df_physeq_selected <- df_physeq_selected %>%
 #Let's do our rank:
 df_genus_abundance <- df_physeq_selected %>%
   select(ASV_ID, Relative_Abundance) #This isolated table make us easy to see the highest abundant in the rank
-df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 0.5, "ASVs < 0.5%", df_physeq_selected$ASV_ID)
+df_genus_abundance$ASV_ID <- ifelse(df_physeq_selected$Relative_Abundance < 2, "ASVs < 2%", df_physeq_selected$ASV_ID)
 df_genus_abundance #Now, ASV <1% will be recognize all the same as a small percentage ASV.
 #Make a summary of the ASVs we are going to plot
 df_genus_abundance_summed <- df_genus_abundance %>%
@@ -839,8 +886,8 @@ df_genus_abundance_summed <- df_genus_abundance_summed %>%
   mutate(
     Description = case_when(
       Taxon == "Class: Bryopsida" ~ "Bryopsida (moss)",
-      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (mosses)",
-      Taxon == "Family: Bryaceae" ~ "Bryaceae (mosses)",
+      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (moss)",
+      Taxon == "Family: Bryaceae" ~ "Bryaceae (moss)",
       Taxon == "Genus: Blasia sp." ~ "Blasia (liverworts)",
       Taxon == "Genus: Tortula sp. " ~ "Tortula (moss)",
       Taxon == "Genus: Sanguina sp." ~ "Sanguina (microalgae)",
@@ -849,30 +896,42 @@ df_genus_abundance_summed <- df_genus_abundance_summed %>%
       Taxon == "Family: Chlamydomonadales_fa" ~ "Chlamydomonadales (microalgae)",
       Taxon == "Genus: Chloroidium" ~ "Chloroidium (microalgae)",
       Taxon == "Genus: Chlamydomonas" ~ "Chlamydomonadales (microalgae)",
+      Taxon == "Others" ~ "Others <2%",
+      Taxon == "Phylum: Ochrophyta" ~ "Ochrophyta (microalgae)",
+      Taxon == "Class: Embryophyta" ~ "Embryophyta (moss)",
+      Taxon == "Genus: Atrichopsis sp." ~ "Atrichopsis (moss)",
+      Taxon == "Class: Trebouxiophyceae" ~ "Trebouxiophyceae (microalgae)",
       Taxon == "Genus: Chromochloris sp." ~ "Chromochloris (microalgae)",
-      Taxon == "Genus: Xanthonema" ~ "Xanthonema (microalgae)",
-      Taxon == "Genus: Ochromonas" ~ "Ochromonas (microalgae)",
       Taxon == "Genus: Coccomyxa" ~ "Coccomyxa (microalgae)",
-      Taxon == "Others" ~ "Others",
+      Taxon == "Genus: Xanthonema" ~ "Xanthonema (microalgae)",
+      Taxon == "Order: Bryales" ~ "Bryales (moss)",
       TRUE ~ Taxon ))
+
 df_genus_abundance_summed
 
 ########Pieplot-----
+
 colors <- c(
   "Bryopsida (moss)" = "#E9A89B",   # azul
-  "Atrichopsis (mosses)" = "#B7C9F2",       # naranja
-  "Bryaceae (mosses)" = "#EF9C66",       # verde
+  "Atrichopsis (moss)" = "#B7C9F2",       # naranja
+  "Bryaceae (moss)" = "#EF9C66",       # verde
   "Blasia (liverworts)" = "#78ABA8",
   "Tortula (moss)" = "#FCDC94",
   "Chloroidium (microalgae)" = "#C8CFA0", 
-  "Others"= "grey",
+  "Others <2%"= "grey",
   "Chlamydomonadales (microalgae)" = "#BBE9FF",
   "Limnomonas (microalgae)"= "#7C96AB",
-  "Sanguina (microalgae)"="#E7D4B5" ,
+  "Sanguina (microalgae)"="#FD7979" ,
   "Xanthonema (microalgae)" = "#25671E",
   "Coccomyxa (microalgae)"= "#FE9EC7",
   "Ochromonas (microalgae)"= "#FFF7CD",
-  "Chromochloris (microalgae)"= "#64E2B7")
+  "Ochrophyta (microalgae)" = "#B87C4C",
+  "Embryophyta (moss)"= "#E7D4B5",
+  "Chromochloris (microalgae)"= "#64E2B7",
+  "Bryales (moss)" = "#FFE6E6"
+)
+
+
 ###Pie plot
 pie_850nonDDs_18S <- ggplot(df_genus_abundance_summed, aes(x = 2, y = Summed_Relative_Abundance, fill = Description)) +
   geom_bar(stat = "identity", color = "white", width = 1) +
